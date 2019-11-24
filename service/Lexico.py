@@ -54,40 +54,65 @@ class AnalisadorLexico:
 
 
     def separa(self, word):
+        self.clearWord()
+        inicio = 0
+        texto = ""
 
         if word is not "":
-            word = word.lower()
-            alfabeto = ""
-            simbolos = ""
-            ultimoCaracter = ""
-            flagSimbolo = 0
+            while inicio < len(word):
 
-            for caracter in word:
-                print(caracter)
-                if not flagSimbolo:
-                    if caracter.isalpha():
-                        alfabeto += caracter
-                        ultimoCaracter = caracter
-                    elif (caracter.isdigit() or caracter is '_'):
-                        alfabeto += caracter
-                        ultimoCaracter = caracter
-                    elif alfabeto.isdigit() and caracter is '.':
-                        alfabeto += caracter
-                    else:
-                        self.classifica(alfabeto)
-                        print(alfabeto)
-                        alfabeto = ""
-                        flagSimbolo = 1
+                if word[inicio].isalpha():
+                    for i in range(inicio, len(word)):
+                        if word[i].isalpha() or word[i].isdigit() or word[i] is '_':
+                            texto += word[i]
+                        else:
+                            inicio = i
+                            self.classifica(texto)
+                            texto = ""
+                            break
+
+                        if i == len(word) - 1:
+                            inicio = i
+                            self.classifica(texto)
+                            texto = ""
+                            inicio = i + 1
+                            break
                 
-                if flagSimbolo:
-                    simbolos += caracter
-                    if( ultimoCaracter.isalpha() or ultimoCaracter.isdigit() or ultimoCaracter is '_' and len(simbolos) >= 1):
-                        self.classifica(simbolos)
-                        simbolos = ""
-                    flagSimbolo = 0
-            self.classifica(alfabeto)
-        self.clearWord()
+                elif not(word[inicio].isalpha() or word[inicio].isdigit() or word[inicio] is '_'):
+                    for i in range(inicio, len(word)):
+                        if not(word[i].isalpha() or word[i].isdigit() or word[i] is '_'):
+                            texto += word[i]
+                        else:
+                            inicio = i
+                            self.classifica(texto)
+                            texto = ""
+                            break
+                        
+                        if i == len(word) - 1:
+                            inicio = i
+                            self.classifica(texto)
+                            texto = ""
+                            inicio = i + 1
+                            break
 
+                elif word[inicio].isdigit():
+                    for i in range(inicio, len(word)):
+                        if word[i].isdigit():
+                            texto += word[i]
+                        elif word[i] is '.' and word[i+1].isdigit():
+                            texto += word[i]
+                        else:
+                            inicio = i
+                            self.classifica(texto)
+                            texto = ""
+                            break
+
+                        if i == len(word) - 1:
+                            inicio = i
+                            self.classifica(texto)
+                            texto = ""
+                            inicio = i + 1
+                            break
 
     def classifica(self, word):
 
@@ -113,5 +138,4 @@ class AnalisadorLexico:
 
 
 # TO DO
-# -> validar número de ponto flutuante
-# -> validar linha 
+# -> Ajeitar o número da linha que está sendo lida.
