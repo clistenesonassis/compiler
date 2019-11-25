@@ -15,14 +15,14 @@ class AnalisadorLexico:
                             "Identificador",
                             "Delimitador",
                             "Atribuição",
-                            "Número Inteiro",
+                            "Inteiro",
                             "Aditivos",
                             "Multiplicativos", 
                             "Relacional",
-                            "Float"]
+                            "Real"]
 
     def __init__(self, arquivoInput):
-        self.log = Log()
+        self.log = []
         self.arquivo = open(arquivoInput, "r")
 
     def clearWord(self):
@@ -50,7 +50,7 @@ class AnalisadorLexico:
                 self.palavra += caracter
         self.separa(self.palavra)
 
-        self.log.printLog()
+        return self.log
 
 
     def separa(self, word):
@@ -118,23 +118,32 @@ class AnalisadorLexico:
 
         if word is not "":
             if word in self.chaves:
-                self.log.addLog( word, self.tipoDeClassificadores[0], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[0], self.linhaCont)
+                self.log.append(novoElemento)
             elif word.isdigit():
-                self.log.addLog( word, self.tipoDeClassificadores[4], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[4], self.linhaCont)
+                self.log.append(novoElemento)
             elif word in self.delimitadores:
-                self.log.addLog( word, self.tipoDeClassificadores[2], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[2], self.linhaCont)
+                self.log.append(novoElemento)
             elif word in self.atribuicao:
-                self.log.addLog( word, self.tipoDeClassificadores[3], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[3], self.linhaCont)
+                self.log.append(novoElemento)
             elif word in self.aditivos:
-                self.log.addLog( word, self.tipoDeClassificadores[5], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[5], self.linhaCont)
+                self.log.append(novoElemento)
             elif word in self.multiplicativos:
-                self.log.addLog( word, self.tipoDeClassificadores[6], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[6], self.linhaCont)
+                self.log.append(novoElemento)
             elif word in self.relacionais:
-                self.log.addLog( word, self.tipoDeClassificadores[7], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[7], self.linhaCont)
+                self.log.append(novoElemento)
             elif self.isFloat(word):
-                self.log.addLog( word, self.tipoDeClassificadores[8], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[8], self.linhaCont)
+                self.log.append(novoElemento)
             else:
-                self.log.addLog( word, self.tipoDeClassificadores[1], self.linhaCont)
+                novoElemento = Log( word, self.tipoDeClassificadores[1], self.linhaCont)
+                self.log.append(novoElemento)
 
 
 # TO DO

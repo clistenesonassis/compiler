@@ -1,16 +1,16 @@
 class Log:
 
-    def __init__(self):
-        self.token = []
-        self.classif = []
-        self.linha = []
+    def __init__(self, token, classif, linha):
+        self.token = token
+        self.classif = classif
+        self.linha = linha
 
-    def printLog(self):
+    def printLog(self, log):
         print("| Token            | Classificação         | Linha")
         print("|------------------|-----------------------|------")
-
-        for i in range(len(self.token)):
-            print("|", self.token[i], "-" * (15 - len(self.token[i])), "|", self.classif[i], "-" * (20 - len(self.classif[i])), "|", self.linha[i])
+        
+        for i in range(len(log)):
+            print("|", log[i].token, "-" * (15 - len(log[i].token)), "|", log[i].classif, "-" * (20 - len(log[i].classif)), "|", log[i].linha)
 
     
     def addLog(self, token, classif, line):
