@@ -2,6 +2,22 @@ program teste; {programa exemplo}
 var
     valor1: integer;
     valor2: real;
+
+    procedure test(val1: integer; val2: real);
+        var
+            testvar:integer;
+
+            procedure test(val1: integer; val2: real);
+                var
+                    testvar:integer;
+                begin
+                    testvar:=10;
+                end;
+
+        begin
+            testvar:=10;
+        end;
+
 begin
     valor1 := 200;
 end.

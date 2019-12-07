@@ -44,8 +44,8 @@ class AnalisadorLexico:
             elif caracter is ' ' or caracter is '\t':
                 self.separa(self.palavra)
             elif caracter is '\n':
-                self.linhaCont += 1
                 self.separa(self.palavra)
+                self.linhaCont += 1
             else:
                 self.palavra += caracter
         self.separa(self.palavra)
@@ -82,6 +82,11 @@ class AnalisadorLexico:
                     for i in range(inicio, len(word)):
                         if not(word[i].isalpha() or word[i].isdigit() or word[i] is '_'):
                             texto += word[i]
+                            if texto is ')':
+                                inicio = i + 1
+                                self.classifica(texto)
+                                texto = ""
+                                break
                         else:
                             inicio = i
                             self.classifica(texto)
