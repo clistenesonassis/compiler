@@ -3,19 +3,19 @@ var
     valor1: integer;
     valor2: real;
 
-    procedure test(val1: integer; val2: real);
+    procedure teste2(val1: integer; val2: real);
         var
-            testvar:integer;
+            valor1:integer;
 
-            procedure test(val1: integer; val2: real);
+            procedure teste3(val1: integer; val2: real);
                 var
-                    testvar:integer;
+                    valor1:real;
                 begin
-                    testvar:=10;
+                    valor1:=10 + 5.55;
                 end;
 
         begin
-            testvar:=10;
+            valor1:=10;
         end;
 
 begin

@@ -1,10 +1,12 @@
-from Lexico import *
+from Semantic import *
 
-class AnalisadorSintatico:
+class Syntactic:
     logFinal = []
     pos = 0
-    tipos = ["integer", "real", "boolean"]
     x = 0
+    tipos = ["integer", "real", "boolean"]
+    pilha = pilhaSemantica()
+    tiposVariaveis = pilhaTipos()
 
     def __init__(self, log):
         self.logFinal = log
@@ -49,12 +51,17 @@ class AnalisadorSintatico:
 
             ## Analisa os comandos
             if self.logFinal[self.pos].token == "begin":
-                #self.pilha.inicioEscopo()
+                
+                ## SEMANTIC
+                self.pilha.inicioEscopo()
+                
                 self.proximo()
                 if not self.comandoComposto():
                     print("ERRO NA DECLARACAO DE COMMANDO COMPOSTO |linha: ", self.logFinal[self.pos].linha)
                     return False
-            #self.pilha.fimEscopo()
+
+            ## SEMANTIC
+            self.pilha.fimEscopo()
 
             ## Analisa o fim do programa
             if self.logFinal[self.pos].token != ".":
@@ -66,8 +73,10 @@ class AnalisadorSintatico:
     def variaveis(self):
 
         while self.logFinal[self.pos].classif == "Identificador":
-            #listaDeVariaveis = []
-            #listaDeVariaveis.append(self.logFinal[self.pos].token)
+            ## SEMANTIC
+            listaDeVariaveis = []
+            listaDeVariaveis.append(self.logFinal[self.pos].token)
+            
             self.proximo()
 
             while self.logFinal[self.pos].token != ":":
@@ -75,10 +84,13 @@ class AnalisadorSintatico:
                     print("FALTA , DEPOIS DE UM ID |linha: ", self.logFinal[self.pos].linha)
                     return False
                 self.proximo()
+
                 if self.logFinal[self.pos].classif != "Identificador":
                     print("FALTA ID DEPOIS DE UMA , |linha: ", self.logFinal[self.pos].linha)
                     return False
-                #listaDeVariaveis.append(self.logFinal[self.pos].token)
+                
+                ## SEMANTIC
+                listaDeVariaveis.append(self.logFinal[self.pos].token)
                 self.proximo()
 
             if self.logFinal[self.pos].token != ':':
@@ -90,7 +102,7 @@ class AnalisadorSintatico:
                 print("TIPO DE VARIAVEL ESPERADO|linha: ", self.logFinal[self.pos].linha)
                 return False
 
-            ''' ## SEMÂNTICO
+            ## SEMANTIC ##
             tipoVariaveis = ''
             if self.logFinal[self.pos].token == "integer":
                 tipoVariaveis = "Inteiro"
@@ -98,8 +110,8 @@ class AnalisadorSintatico:
                 tipoVariaveis = "Real"
 
             for x in listaDeVariaveis:
-                self.pilha.adicionarSimbolo(simbolo(x, tipoVariaveis))
-            '''
+                self.pilha.adicionarSimbolo( simbolo(x, tipoVariaveis) )
+            ## SEMANTIC ##
 
             self.proximo()
 
@@ -119,7 +131,9 @@ class AnalisadorSintatico:
 
         #Analisar a declaração dos argumentos.
         while self.logFinal[self.pos].token == "var" or self.logFinal[self.pos].classif == "Identificador":
-            #listaDeVariaveis = []
+            ## SEMANTIC
+            listaDeVariaveis = []
+
             if self.logFinal[self.pos].token == "var":
                 self.proximo()
 
@@ -127,7 +141,9 @@ class AnalisadorSintatico:
                 print("FALTA ID DE ARGUMENTO |linha: ", self.logFinal[self.pos].linha)
                 return False
 
-            #listaDeVariaveis.append(self.logFinal[self.pos].token)
+            ## SEMANTIC
+            listaDeVariaveis.append(self.logFinal[self.pos].token)
+
             self.proximo()
 
             while self.logFinal[self.pos].token != ":":
@@ -141,7 +157,9 @@ class AnalisadorSintatico:
                     print("FALTA ID DEPOIS DE UMA , |linha: ", self.logFinal[self.pos].linha)
                     return False
 
-                #listaDeVariaveis.append(self.logFinal[self.pos].token)
+                ## SEMANTIC
+                listaDeVariaveis.append(self.logFinal[self.pos].token)
+                
                 self.proximo()
 
             if self.logFinal[self.pos].token != ':':
@@ -154,8 +172,9 @@ class AnalisadorSintatico:
                 print("TIPO DE VARIAVEL ESPERADO|linha: ", self.logFinal[self.pos].linha)
                 return False
 
-            #for x in listaDeVariaveis:
-            #    self.pilha.adicionarSimbolo(simbolo(x, self.logFinal[self.pos].token))
+            ## SEMANTIC
+            for x in listaDeVariaveis:
+                self.pilha.adicionarSimbolo(simbolo(x, self.logFinal[self.pos].token))
 
             self.proximo()
 
@@ -195,11 +214,12 @@ class AnalisadorSintatico:
         if self.logFinal[self.pos].token != ';':
             return True
         else:
-            '''
+            ## SEMANTIC
             if not self.tiposVariaveis.finalizar():
                 print("Conversão inválida de Real para Integer | Linha:", self.logFinal[self.pos].linha)
                 exit(-3)
-            '''
+            ## SEMANTIC
+
             self.proximo()
             if self.comando():
                 return self.lista_de_comandos2()
@@ -214,14 +234,15 @@ class AnalisadorSintatico:
 
     def comando(self):
         if self.logFinal[self.pos].classif == "Identificador":
-            '''
+            ## SEMANTIC
             if self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token) is None:
                 print("Variável não declarada:", self.logFinal[self.pos].token)
                 exit(-2)
-            '''
+            ## SEMANTIC
 
             if self.logFinal[self.pos + 1].token == ':=':
-                #self.tiposVariaveis.inicializar(self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token).tipo)
+                ## SEMANTIC
+                self.tiposVariaveis.inicializar(self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token).tipo)
                 self.proximo()
                 self.proximo()
                 return self.expressao()
@@ -334,12 +355,12 @@ class AnalisadorSintatico:
 
     def fator(self):
         if self.logFinal[self.pos].classif == "Identificador":
-            '''
+            ## SEMANTIC
             if self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token) == None:
                 print("Variável não declarada:", self.logFinal[self.pos].token)
                 exit(-2)
             self.tiposVariaveis.adicionarTipo(self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token).tipo)
-            '''
+            ## SEMANTIC
 
             self.proximo()
             if self.logFinal[self.pos].token == '(':
@@ -362,7 +383,8 @@ class AnalisadorSintatico:
                 return False
             return True
         elif self.logFinal[self.pos].classif in ["Real", "Inteiro"]:
-            #self.tiposVariaveis.adicionarTipo(self.logFinal[self.pos].classif)
+            ## SEMANTIC
+            self.tiposVariaveis.adicionarTipo(self.logFinal[self.pos].classif)
             self.proximo()
             return True
         elif self.logFinal[self.pos].classif == "Chave":
@@ -404,7 +426,8 @@ class AnalisadorSintatico:
     ## Analisa os comandos dentro do escopo.
     def comandoComposto(self):
         if self.logFinal[self.pos].token == "end":
-            #self.pilha.fimEscopo()
+            ## SEMANTIC
+            self.pilha.fimEscopo()
             self.proximo()
             return True
         else:
@@ -415,12 +438,12 @@ class AnalisadorSintatico:
                     print("AUSENCIA DO END |linha: ", self.logFinal[self.pos].linha)
                     return False
                 else:
-                    '''
+                    ## SEMANTIC
                     if not self.tiposVariaveis.finalizar():
                         print("Conversão inválida de Real para Integer | Linha:", self.logFinal[self.pos].linha )
                         exit(-3)
                     self.pilha.fimEscopo()
-                    '''
+                    ## SEMANTIC
                     self.proximo()
                     return True
 
@@ -435,13 +458,13 @@ class AnalisadorSintatico:
                 print("FALTA ID DEPOIS DE UMA , |linha:", self.logFinal[self.pos].linha)
                 return False
 
-            '''
+            ## SEMANTIC
             if self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token) != None:
                 print("Multiplas funções com o mesmo nome:", self.logFinal[self.pos].token)
                 exit(-2)
             self.pilha.adicionarSimbolo(simbolo(self.logFinal[self.pos].token, "Procedure"))
             self.pilha.adicionarSimbolo(simbolo('$', '$'))
-            '''
+            ## SEMANTIC
 
             self.proximo()
 
@@ -459,15 +482,18 @@ class AnalisadorSintatico:
 
             ## Analisa um novo subprograma.
             if self.logFinal[self.pos].token == "procedure":
-                #self.pilha.adicionarSimbolo(simbolo(self.logFinal[self.pos].token, "Procedure"))
-                #self.pilha.adicionarSimbolo(simbolo('$', '$'))
+                ## SEMANTIC
+                self.pilha.adicionarSimbolo(simbolo(self.logFinal[self.pos].token, "Procedure"))
+                self.pilha.adicionarSimbolo(simbolo('$', '$'))
+                ## SEMANTIC
                 if not self.subprograma():
                     print("ERRO NA DECLARACAO DE SUBPROGRAMA DE SUBPROGRAMA |linha: ", self.logFinal[self.pos - 1].linha)
                     return False
 
             ## Analisa o escopo.
             if self.logFinal[self.pos].token == "begin":
-                #self.pilha.inicioEscopo()
+                ## SEMANTIC
+                self.pilha.inicioEscopo()
                 self.proximo()
                 if not self.comandoComposto():
                     print("ERRO NA DECLARACAO DE COMMANDO COMPOSTO |linha: ", self.logFinal[self.pos].linha)
@@ -479,5 +505,6 @@ class AnalisadorSintatico:
                 return False
             self.proximo()
 
-        #self.pilha.fimEscopo()
+        ## SEMANTIC
+        self.pilha.fimEscopo()
         return True
