@@ -225,6 +225,7 @@ class Syntactic:
                 return self.lista_de_comandos2()
             return True # para validar o end.#
 
+    ## Trata o "else", ou seja, o final da condição.
     def parte_else(self):
         if self.logFinal[self.pos].token != "else":
             return True
@@ -240,6 +241,7 @@ class Syntactic:
                 exit(-2)
             ## SEMANTIC
 
+            ## tratar atribuição.
             if self.logFinal[self.pos + 1].token == ':=':
                 ## SEMANTIC
                 self.tiposVariaveis.inicializar(self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token).tipo)
@@ -258,6 +260,7 @@ class Syntactic:
                 self.tiposVariaveis.adicionarTipo(self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token).tipo)
                 self.proximo()
                 return True
+
         elif self.logFinal[self.pos].token == "begin":
             if not self.tiposVariaveis.finalizar():
                 print("Conversão inválida de Real para Integer | Linha:", self.logFinal[self.pos].linha)
@@ -265,6 +268,8 @@ class Syntactic:
             self.pilha.inicioEscopo()
             self.proximo()
             return self.comandoComposto()
+
+        ## tratando a condicional if.
         elif self.logFinal[self.pos].token == "if":
             self.proximo()
             if not self.expressao():
@@ -275,6 +280,8 @@ class Syntactic:
             if not self.comando():
                 return False
             return self.parte_else()
+
+        ## tratando a condicional while.
         elif self.logFinal[self.pos].token == "while":
             self.proximo()
             if not self.expressao():
@@ -303,6 +310,7 @@ class Syntactic:
         else:
             return True
 
+    ## Analisa expressões simples e relacional:. exemplo: (var1 + var2) > (var3).
     def expressao(self):
         if self.expressao_simples1():
             if self.op_relacional():
@@ -340,6 +348,7 @@ class Syntactic:
         else:
             return False
 
+    ## Analisa temos com operadores multiplicativos.
     def termo2(self):
         if not self.op_multiplicativo():
             return True
@@ -355,6 +364,7 @@ class Syntactic:
 
     def fator(self):
         if self.logFinal[self.pos].classif == "Identificador":
+            print("Identificador", self.logFinal[self.pos].classif)
             ## SEMANTIC
             if self.pilha.pesquisaSimbolo(self.logFinal[self.pos].token) == None:
                 print("Variável não declarada:", self.logFinal[self.pos].token)
@@ -373,6 +383,8 @@ class Syntactic:
                 return True
             else:
                 return True
+
+        ## Analisa a ocorrência de uma nova expressão.
         elif self.logFinal[self.pos].token == '(':
             self.proximo()
             if not self.expressao():
@@ -382,12 +394,16 @@ class Syntactic:
             else:
                 return False
             return True
+
+        ## Analisar os números.
         elif self.logFinal[self.pos].classif in ["Real", "Inteiro"]:
+            print("entrei", self.logFinal[self.pos].classif)
             ## SEMANTIC
             self.tiposVariaveis.adicionarTipo(self.logFinal[self.pos].classif)
             self.proximo()
             return True
-        elif self.logFinal[self.pos].classif == "Chave":
+
+        elif self.logFinal[self.pos].classif == "Palavra Reservada": ## Chave
             if self.logFinal[self.pos].token in ["true", "false"]:
                 self.proximo()
                 return True
@@ -395,6 +411,7 @@ class Syntactic:
                 self.proximo()
                 return self.fator()
 
+    ## Analisa sinal.
     def sinal(self):
         if self.logFinal[self.pos] in ['+', '-']:
             self.proximo()
@@ -402,6 +419,7 @@ class Syntactic:
         else:
             return False
 
+    ## Analisa operadores relacionais.
     def op_relacional(self):
         if self.logFinal[self.pos].token in ["=", "<", ">", "<=", ">=", "<>"]:
             self.proximo()
@@ -409,6 +427,7 @@ class Syntactic:
         else:
             return False
 
+    ## Analisa operadores Aditivos.
     def op_aditivo(self):
         if self.logFinal[self.pos].token in ["+", "-", "or"]:
             self.proximo()
@@ -416,6 +435,7 @@ class Syntactic:
         else:
             return False
 
+    ## Analisa operadores multiplicativos.
     def op_multiplicativo(self):
         if self.logFinal[self.pos].token in ["*", "/", "and"]:
             self.proximo()
@@ -434,6 +454,7 @@ class Syntactic:
             if not self.lista_de_comandos1():
                 return False
             else:
+                ## validar a existência do 'end' ao final do subprograma.
                 if self.logFinal[self.pos].token != "end":
                     print("AUSENCIA DO END |linha: ", self.logFinal[self.pos].linha)
                     return False
@@ -446,7 +467,6 @@ class Syntactic:
                     ## SEMANTIC
                     self.proximo()
                     return True
-
 
     def subprograma(self):
 

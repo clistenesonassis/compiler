@@ -5,17 +5,18 @@ var
 
     procedure teste2(val1: integer; val2: real);
         var
-            valor1:integer;
+            valor3:integer;
 
             procedure teste3(val1: integer; val2: real);
                 var
-                    valor1:real;
+                    valor4:integer;
                 begin
-                    valor1:=10 + 5.55;
+                    valor4:= (10 + 51) = 10;
+                    valor3 := 10;
                 end;
 
         begin
-            valor1:=10;
+            valor3:=10;
         end;
 
 begin
