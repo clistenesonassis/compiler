@@ -1,5 +1,5 @@
 let artigos = ['o', 'a', 'os', 'as'];
-let preposicao = ['da', 'de', 'do', 'das', 'dos'];
+let preposicao = ['da', 'de', 'do', 'das', 'dos', 'em'];
 let arrayFinal = [];
 
 // remove os artigos, conjunções e 

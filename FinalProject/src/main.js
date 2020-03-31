@@ -9,10 +9,10 @@ let parser = new DOMParser();
 //Vetor para armazenar todos os nomes dos arquivos lidos
 let logfinalWord = [];
 
-fs.readFile('./test02','utf8', async function(err,data){
+fs.readFile('./Tests/test01','utf8', async function(err,data){
+    
     //Enviando para o console o resultado da leitura
     let arrayWords = data.split(' ');
-
     console.log('## ENTRADA ##');
     console.log(arrayWords);
 
@@ -23,14 +23,16 @@ fs.readFile('./test02','utf8', async function(err,data){
     
     // Removendo os artigos e preposições básicos.
     logfinalWord = stopwords(logfinalWord);
-    
     console.log('## ARTIGOS E PREPOSIÇÕES BÁSICOS REMOVIDOS ##');
     console.log(logfinalWord);
-    
+
     logfinalWord = await startTokerization(logfinalWord);
-    
     console.log('## TOKERIZAÇÃO ##');
     console.log(logfinalWord);
+
+    // bag of words.
+    console.log('## TOTAL DE PALAVRAS ##');
+    console.log(logfinalWord.length);
 
     console.log('## VERIFICANDO SINTAXE ##');
     sintaticAnalyzer(logfinalWord);
