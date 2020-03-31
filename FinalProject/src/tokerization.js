@@ -15,6 +15,7 @@ gramClass.set('v. tr. e intr.', 'verbo');
 gramClass.set('v. tr. e pron.', 'verbo');
 gramClass.set('adj.', 'adjetivo');
 gramClass.set('adj. 2 g.', 'adjetivo');
+gramClass.set('adv.', 'advérbio');
 gramClass.set('prep.', 'preposição');
 gramClass.set('pron. indef.', 'pronome indefinido');
 gramClass.set('caracter esp.', 'caracter especial');

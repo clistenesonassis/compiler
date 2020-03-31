@@ -31,6 +31,13 @@ const stemizacao = async (word) => {
         });
     }
 
+    // a palavra "ato" não consegue obter a respostar no servidor do dicionario.
+    if(word == 'ato') {
+        rootWord = 'ato';
+        gramClass.pop();
+        gramClass.push('s. m.');
+    }
+
     wrapper.push(rootWord.toString());
     wrapper.push(gramClass);
     console.log("stemização: " + word + ' - ', wrapper);

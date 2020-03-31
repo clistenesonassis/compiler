@@ -2,15 +2,16 @@ let fs = require( 'fs');
 let { stopwords } = require('./stopwords');
 let { removeSpecialElement } = require('./removeSpecialElement');
 let { startTokerization } = require('./tokerization');
+let { sintaticAnalyzer } = require('./sintaticAnalyzer');
 let DOMParser = require('dom-parser');
 let parser = new DOMParser();
 
 //Vetor para armazenar todos os nomes dos arquivos lidos
 let logfinalWord = [];
 
-fs.readFile('../Tests/test01','utf8', async function(err,data){
+fs.readFile('./test02','utf8', async function(err,data){
     //Enviando para o console o resultado da leitura
-    arrayWords = data.split(' ');
+    let arrayWords = data.split(' ');
 
     console.log('## ENTRADA ##');
     console.log(arrayWords);
@@ -30,6 +31,9 @@ fs.readFile('../Tests/test01','utf8', async function(err,data){
     
     console.log('## TOKERIZAÇÃO ##');
     console.log(logfinalWord);
+
+    console.log('## VERIFICANDO SINTAXE ##');
+    sintaticAnalyzer(logfinalWord);
     return;
 
 });
